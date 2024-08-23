@@ -83,36 +83,35 @@ function App() {
     useEffect(() => {
         applyFilters();
         console.log(manufacturerFilter);
-    },[manufacturerFilter,cars] )
+    },[manufacturerFilter,yearFilter,colorFilter,priceRangeFilter,engineVolumeFilter,cars] )
     
     const applyFilters = () => {
         let filteredCars = [...cars];
-            console.log(filteredCars);
-            filteredCars = filteredCars.filter(
-                (car) => car.manufacturer.includes(manufacturerFilter) || manufacturerFilter == "All"
-            );
-        // if (yearFilter) {
-        //     filteredCars = filteredCars.filter(
-        //         (car) => car.year === parseInt(yearFilter, 10)
-        //     );
-        // }
-        // if (colorFilter) {
-        //     filteredCars = filteredCars.filter(
-        //         (car) => car.color === colorFilter
-        //     );
-        // }
-        // if (engineVolumeFilter) {
-        //     filteredCars = filteredCars.filter(
-        //         (car) => car.engineVolume === parseInt(engineVolumeFilter, 10)
-        //     );
-        // }
-        //if (priceRangeFilter.min || priceRangeFilter.max) {
-            //filteredCars = filteredCars.filter(
-                //(car) =>
-                    //car.price >= priceRangeFilter.min &&
-                    //car.price <= priceRangeFilter.max
-           // );
-        //}
+        filteredCars = filteredCars.filter(
+            (car) => car.manufacturer.includes(manufacturerFilter) || manufacturerFilter == "All"
+        );
+        
+        filteredCars = filteredCars.filter(
+            (car) => car.year.includes(yearFilter)
+        );
+
+        filteredCars = filteredCars.filter(
+            (car) => car.color.includes(colorFilter)
+        );
+
+        filteredCars = filteredCars.filter(
+            (car) => 
+              engineVolumeFilter.min ? car.engineVolume >= engineVolumeFilter.min : true &&
+              engineVolumeFilter.max ? car.engineVolume <= engineVolumeFilter.max : true
+          );
+
+
+        filteredCars = filteredCars.filter(
+            (car) =>
+                car.price >= priceRangeFilter.min &&
+                car.price <= priceRangeFilter.max
+        );
+    
         setFilteredCars(filteredCars);
     };
 

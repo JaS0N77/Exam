@@ -60,7 +60,7 @@ const EditCar = ({ car, handleEditCar, handleToggleEdit }) => {
                 <input
                     type="number"
                     value={volume}
-                    onChange={(event) => setVolume(event.target.value)}
+                    onChange={(event) => setVolume(parseFloat(event.target.value))}
                 />
             </label>
             <br />
@@ -69,7 +69,7 @@ const EditCar = ({ car, handleEditCar, handleToggleEdit }) => {
                 <input
                     type="number"
                     value={price}
-                    onChange={(event) => setPrice(event.target.value)}
+                    onChange={(event) => setPrice(parseInt(event.target.value))}
                 />
             </label>
             <br />

@@ -72,6 +72,7 @@ const Filter = ({
                         <MenuItem value="Ford">Ford</MenuItem>
                         <MenuItem value="Honda">Honda</MenuItem>
                         <MenuItem value="Audi">Audi</MenuItem>
+                        <MenuItem value="BMW">BMW</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>
@@ -84,6 +85,8 @@ const Filter = ({
                         onChange={handleYearChange}
                     >
                         <MenuItem value="">All</MenuItem>
+                        <MenuItem value="2018">2018</MenuItem>
+                        <MenuItem value="2019">2019</MenuItem>
                         <MenuItem value="2020">2020</MenuItem>
                         <MenuItem value="2021">2021</MenuItem>
                         <MenuItem value="2022">2022</MenuItem>
@@ -102,6 +105,8 @@ const Filter = ({
                         <MenuItem value="Red">Red</MenuItem>
                         <MenuItem value="Blue">Blue</MenuItem>
                         <MenuItem value="White">White</MenuItem>
+                        <MenuItem value="Black">Black</MenuItem>
+                        <MenuItem value="Pink">Pink</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>
@@ -119,6 +124,8 @@ const Filter = ({
                         <MenuItem value="1.5">1.5L</MenuItem>
                         <MenuItem value="2.0">2.0L</MenuItem>
                         <MenuItem value="2.5">2.5L</MenuItem>
+                        <MenuItem value="3.0">3.0L</MenuItem>
+                        <MenuItem value="3.5">3.5L</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>
