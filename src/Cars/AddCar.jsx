@@ -66,7 +66,7 @@ const AddCar = ({ handleAddCar }) => {
                 <input
                     type="number"
                     value={volume}
-                    onChange={(event) => setVolume(parseFloat(event.target.value))}
+                    onChange={(event) => setVolume(event.target.value)}
                 />
             </label>
             <br />

@@ -121,11 +121,10 @@ const Filter = ({
                         onChange={handleEngineVolumeChange}
                     >
                         <MenuItem value="">All</MenuItem>
-                        <MenuItem value="1.5">1.5L</MenuItem>
-                        <MenuItem value="2.0">2.0L</MenuItem>
-                        <MenuItem value="2.5">2.5L</MenuItem>
-                        <MenuItem value="3.0">3.0L</MenuItem>
-                        <MenuItem value="3.5">3.5L</MenuItem>
+                        <MenuItem value="1">1.5L</MenuItem>
+                        <MenuItem value="2">2.0L</MenuItem>
+                        <MenuItem value="3">3.0L</MenuItem>
+                        <MenuItem value="4">4.0L</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>

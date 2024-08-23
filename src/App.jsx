@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link,useNavigate } from "react-router-dom";
 import AddCar from "./Cars/AddCar";
 import CarList from "./Cars/CarList";
 import Footer from "./Navi/Footer";
 import Filter from "./Filter/Filter";
-import { Container, Grid } from "@mui/material";
 import { Navbar, Nav } from "react-bootstrap";
-import oauthClient from "./Auth/oauthClient";
 import Login from "./Auth/Login";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useAction } from "./hooks/useAction";
+import { useSelector } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import {
+    Container,
+    AppBar,
+    Button,
+    Grid,
+    Menu,
+    MenuItem,
+    Typography,
+    Avatar,
+} from "@mui/material";
 
 function App() {
     const [cars, setCars] = useState([]);
@@ -22,6 +34,13 @@ function App() {
     });
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [token, setToken] = useState(null);
+    const clientId = 
+        "1065900059215-q1lrvpkhsr7d65h2mhd00lqrq557apqc.apps.googleusercontent.com";
+    const { isAuth, user } = useSelector((state) => state.authReducer);
+    const navigate = useNavigate();
+    const { logout, setTheme } = useAction();
+    const [anchorElUser, setAnchorElUser] = useState(null);
+
 
     useEffect(() => {
         const storedCars = localStorage.getItem("cars");
@@ -80,6 +99,21 @@ function App() {
         }
         //applyFilters();
     };
+
+    const logoutHandler = () => {
+        handleCloseUserMenu();
+        logout();
+        navigate("signin");
+    };
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+
     useEffect(() => {
         applyFilters();
         console.log(manufacturerFilter);
@@ -87,41 +121,36 @@ function App() {
     
     const applyFilters = () => {
         let filteredCars = [...cars];
-        filteredCars = filteredCars.filter(
-            (car) => car.manufacturer.includes(manufacturerFilter) || manufacturerFilter == "All"
-        );
+        if (filteredCars.length > 0) {
+
         
-        filteredCars = filteredCars.filter(
+            filteredCars = filteredCars.filter(
+            (car) => car.manufacturer.includes(manufacturerFilter) || manufacturerFilter == "All"
+            );
+        
+            filteredCars = filteredCars.filter(
             (car) => car.year.includes(yearFilter)
-        );
+            );
 
-        filteredCars = filteredCars.filter(
+            filteredCars = filteredCars.filter(
             (car) => car.color.includes(colorFilter)
-        );
+            );
 
-        filteredCars = filteredCars.filter(
-            (car) => 
-              engineVolumeFilter.min ? car.engineVolume >= engineVolumeFilter.min : true &&
-              engineVolumeFilter.max ? car.engineVolume <= engineVolumeFilter.max : true
-          );
+            filteredCars = filteredCars.filter(
+            (car) =>  car.volume.includes(engineVolumeFilter)
+            
+            
+            );
 
 
-        filteredCars = filteredCars.filter(
+            filteredCars = filteredCars.filter(
             (car) =>
                 car.price >= priceRangeFilter.min &&
                 car.price <= priceRangeFilter.max
-        );
+            );
     
-        setFilteredCars(filteredCars);
-    };
-
-    const handleLogin = () => {
-        oauthClient.authorize();
-    };
-
-    const handleLogout = () => {
-        setToken(null);
-        setIsLoggedIn(false);
+            setFilteredCars(filteredCars);
+        }
     };
 
     useEffect(() => {
@@ -133,7 +162,7 @@ function App() {
     }, []);
 
     return (
-        <BrowserRouter>
+        <GoogleOAuthProvider clientId={clientId}>
             <Navbar bg="light" expand="lg">
                 <Navbar.Brand as={Link} to="/">
                     CarDrive
@@ -150,15 +179,24 @@ function App() {
                         <Nav.Link as={Link} to="/add-car">
                             Add Car
                         </Nav.Link>
-                        {isLoggedIn ? (
-                            <Nav.Link as={Link} to={handleLogout}>
-                                Logout
-                            </Nav.Link>
+                        {!isAuth ? (
+                            <>
+                                <Link to="/login">
+                                    <Button sx={{ color: "black" }}>
+                                        Login
+                                    </Button>
+                                </Link>
+                            </>
                         ) : (
-                            <Nav.Link as={Link} to="/login">
-                                Login
-                            </Nav.Link>
+                            <>
+                                <Link to="/login">
+                                    <Button sx={{ color: "black" }}>
+                                        Logout
+                                    </Button>
+                                </Link>
+                            </>
                         )}
+             
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
@@ -209,7 +247,7 @@ function App() {
                 </Grid>
             </Container>
             <Footer />
-        </BrowserRouter>
+        </GoogleOAuthProvider>
     );
 }
 
