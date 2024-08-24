@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Link,useNavigate } from "react-router-dom";
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Link,
+    useNavigate,
+} from "react-router-dom";
 import AddCar from "./Cars/AddCar";
 import CarList from "./Cars/CarList";
 import Footer from "./Navi/Footer";
@@ -34,13 +40,12 @@ function App() {
     });
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [token, setToken] = useState(null);
-    const clientId = 
+    const clientId =
         "1065900059215-q1lrvpkhsr7d65h2mhd00lqrq557apqc.apps.googleusercontent.com";
     const { isAuth, user } = useSelector((state) => state.authReducer);
     const navigate = useNavigate();
     const { logout, setTheme } = useAction();
     const [anchorElUser, setAnchorElUser] = useState(null);
-
 
     useEffect(() => {
         const storedCars = localStorage.getItem("cars");
@@ -51,7 +56,6 @@ function App() {
         }
     }, []);
 
-
     const handleAddCar = (newCar) => {
         const updatedCars = [...cars, newCar];
         localStorage.setItem("cars", JSON.stringify(updatedCars));
@@ -59,12 +63,10 @@ function App() {
     };
 
     const handleEditCar = (id, updatedCar) => {
-        const index = cars.findIndex((car) =>
-            car.id == id
-        );
-        const updatedCars = [... cars]
+        const index = cars.findIndex((car) => car.id == id);
+        const updatedCars = [...cars];
         updatedCars[index] = updatedCar;
-        console.log(id)
+        console.log(id);
         localStorage.setItem("cars", JSON.stringify(updatedCars));
         setCars(updatedCars);
     };
@@ -117,38 +119,42 @@ function App() {
     useEffect(() => {
         applyFilters();
         console.log(manufacturerFilter);
-    },[manufacturerFilter,yearFilter,colorFilter,priceRangeFilter,engineVolumeFilter,cars] )
-    
+    }, [
+        manufacturerFilter,
+        yearFilter,
+        colorFilter,
+        priceRangeFilter,
+        engineVolumeFilter,
+        cars,
+    ]);
+
     const applyFilters = () => {
         let filteredCars = [...cars];
         if (filteredCars.length > 0) {
-
-        
             filteredCars = filteredCars.filter(
-            (car) => car.manufacturer.includes(manufacturerFilter) || manufacturerFilter == "All"
-            );
-        
-            filteredCars = filteredCars.filter(
-            (car) => car.year.includes(yearFilter)
+                (car) =>
+                    car.manufacturer.includes(manufacturerFilter) ||
+                    manufacturerFilter == "All"
             );
 
-            filteredCars = filteredCars.filter(
-            (car) => car.color.includes(colorFilter)
+            filteredCars = filteredCars.filter((car) =>
+                car.year.includes(yearFilter)
+            );
+
+            filteredCars = filteredCars.filter((car) =>
+                car.color.includes(colorFilter)
+            );
+
+            filteredCars = filteredCars.filter((car) =>
+                car.volume.includes(engineVolumeFilter)
             );
 
             filteredCars = filteredCars.filter(
-            (car) =>  car.volume.includes(engineVolumeFilter)
-            
-            
+                (car) =>
+                    car.price >= priceRangeFilter.min &&
+                    car.price <= priceRangeFilter.max
             );
 
-
-            filteredCars = filteredCars.filter(
-            (car) =>
-                car.price >= priceRangeFilter.min &&
-                car.price <= priceRangeFilter.max
-            );
-    
             setFilteredCars(filteredCars);
         }
     };
@@ -182,21 +188,46 @@ function App() {
                         {!isAuth ? (
                             <>
                                 <Link to="/login">
-                                    <Button sx={{ color: "black" }}>
+                                    <Button sx={{ color: "grey" }}>
                                         Login
                                     </Button>
                                 </Link>
                             </>
                         ) : (
                             <>
-                                <Link to="/login">
-                                    <Button sx={{ color: "black" }}>
-                                        Logout
-                                    </Button>
-                                </Link>
+                                <IconButton
+                                    onClick={handleOpenUserMenu}
+                                    sx={{ p: 0 }}
+                                >
+                                    <Avatar
+                                        alt={user.name}
+                                        src={user.picture}
+                                    />
+                                </IconButton>
+                                <Menu
+                                    sx={{ mt: "45px" }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    <MenuItem onClick={logoutHandler}>
+                                        <Typography textAlign="center">
+                                            Logout
+                                        </Typography>
+                                    </MenuItem>
+                                </Menu>
                             </>
                         )}
-             
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
@@ -217,31 +248,31 @@ function App() {
                                 path="/cars"
                                 element={
                                     <>
-                                    <Filter
-                                    onFilterChange={handleFilterChange}
-                                    manufacturerFilter={manufacturerFilter}
-                                    yearFilter={yearFilter}
-                                    colorFilter={colorFilter}
-                                    engineVolumeFilter={engineVolumeFilter}
-                                    priceRangeFilter={priceRangeFilter}
-                                    />
-                                    <CarList
-                                        cars={filteredCars}
-                                        handleEditCar={handleEditCar}
-                                        handleDeleteCar={handleDeleteCar}
-                                    />
-                                </>
-                                    
+                                        <Filter
+                                            onFilterChange={handleFilterChange}
+                                            manufacturerFilter={
+                                                manufacturerFilter
+                                            }
+                                            yearFilter={yearFilter}
+                                            colorFilter={colorFilter}
+                                            engineVolumeFilter={
+                                                engineVolumeFilter
+                                            }
+                                            priceRangeFilter={priceRangeFilter}
+                                        />
+                                        <CarList
+                                            cars={filteredCars}
+                                            handleEditCar={handleEditCar}
+                                            handleDeleteCar={handleDeleteCar}
+                                        />
+                                    </>
                                 }
                             />
                             <Route
                                 path="/add-car"
                                 element={<AddCar handleAddCar={handleAddCar} />}
                             />
-                            <Route
-                                path="/login"
-                                element={<Login/>}
-                            />
+                            <Route path="/login" element={<Login />} />
                         </Routes>
                     </Grid>
                 </Grid>
